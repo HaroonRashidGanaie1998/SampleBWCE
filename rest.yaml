@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restdemo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restdemo
+  template:
+    metadata:
+      labels:
+        app: restdemo
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - env:
+        - name: cloud
+          value: cloud
+        - name: Port
+          value: "5172"
+      
+   name: restdemo
+        image:  argotest1.azurecr.io/rest/restdemo:latest
+        ports:
+        - containerPort: 5172
+          name: restdemo
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: restdemo
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5172
+  selector:
+    app: restdemo
